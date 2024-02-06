@@ -6,7 +6,7 @@ import ecommerce.models.Product;
 import org.mapstruct.*;
 
 @Mapper(
-        uses = {ReferenceMapper.class},
+        uses = {ReferenceMapper.class, JsonNullableMapper.class},
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy =  ReportingPolicy.IGNORE
 )

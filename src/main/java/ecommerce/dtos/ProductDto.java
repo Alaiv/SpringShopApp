@@ -3,16 +3,17 @@ package ecommerce.dtos;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Getter
 @Setter
 public class ProductDto {
     @NotNull
-    private String name;
+    private JsonNullable<String> name;
     @NotNull
-    private double price;
+    private JsonNullable<Double> price;
     @NotNull
-    private int leftInStock;
-    private Long categoryId;
-    private Long brandId;
+    private JsonNullable<Integer> leftInStock;
+    private JsonNullable<Long> categoryId;
+    private JsonNullable<Long> brandId;
 }

@@ -14,6 +14,7 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -136,8 +137,9 @@ public class ProductControllerTests {
         productsRepository.save(testProduct);
 
         var dto = new ProductDto();
-        dto.setName("new-name123");
-        dto.setPrice(123321.123);
+        dto.setName(JsonNullable.of("test123"));
+        dto.setPrice(JsonNullable.of(123321.123));
+        dto.setLeftInStock(JsonNullable.of(123));
 
         var req = put("/api/products/" + testProduct.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -150,8 +152,9 @@ public class ProductControllerTests {
         // Assert
         testProduct = productsRepository.findById(testProduct.getId()).get();
         assertNotNull(testProduct);
-        assertThat(testProduct.getName()).isEqualTo(dto.getName());
-        assertThat(testProduct.getPrice()).isEqualTo(dto.getPrice());
+        assertThat(testProduct.getName()).isEqualTo(dto.getName().get());
+        assertThat(testProduct.getPrice()).isEqualTo(dto.getPrice().get());
+        assertThat(testProduct.getLeftInStock()).isEqualTo(dto.getLeftInStock().get());
     }
 
     @Test

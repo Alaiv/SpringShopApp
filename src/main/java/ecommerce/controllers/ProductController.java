@@ -4,6 +4,8 @@ import ecommerce.dtos.ProductDto;
 import ecommerce.dtos.ProductVM;
 import jakarta.validation.Valid;
 import ecommerce.mappers.ProductMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ecommerce.repositories.ProductsRepository;
@@ -24,8 +26,9 @@ public class ProductController {
 
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductVM> search() {
-        var products = productsRepository.findAll();
+    public List<ProductVM> search(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int limit) {
+        var products = productsRepository.findAll(PageRequest.of(page, limit));
+
         var result = products.stream()
                 .map(productMapper::map)
                 .toList();
