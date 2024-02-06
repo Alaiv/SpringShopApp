@@ -4,6 +4,7 @@ import ecommerce.dtos.BrandDTO;
 import ecommerce.models.Brand;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -13,4 +14,7 @@ import org.mapstruct.ReportingPolicy;
 )
 public abstract class BrandMapper {
     public abstract Brand map(BrandDTO brandDTO);
+    public abstract BrandDTO map(Brand brand);
+
+    public abstract void update(BrandDTO dto, @MappingTarget Brand model);
 }

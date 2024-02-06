@@ -28,6 +28,9 @@ public class Product implements BaseEntity{
     @NotNull
     private double price;
 
+    @NotNull
+    private int leftInStock;
+
     @ManyToOne
     private Category category;
 

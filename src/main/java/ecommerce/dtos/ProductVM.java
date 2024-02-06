@@ -13,4 +13,5 @@ public class ProductVM {
     private double price;
     private Brand brand;
     private Category category;
+    private int leftInStock;
 }
