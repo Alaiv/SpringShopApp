@@ -10,11 +10,14 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +38,8 @@ public class OrdersControllerTests {
     private CategoryRepository categoryRepository;
     @Autowired
     private BasketRepository basketRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,12 +70,19 @@ public class OrdersControllerTests {
                 .supply(Select.field(Product::getPrice), () -> faker.number().randomDouble(3, 1, 200))
                 .create();
 
+        var user = Instancio.of(User.class)
+                .supply(Select.field(User::getEmail), () -> faker.darkSouls().classes() + "@google.com")
+                .supply(Select.field(User::getPassword), () -> faker.darkSouls().shield())
+                .create();
+
         brandRepository.save(testBrand);
         categoryRepository.save(testCategory);
         productsRepository.save(testProduct);
+        userRepository.save(user);
 
         testBasket = Instancio.of(Basket.class)
-                .ignore(Select.field(Product::getId))
+                .ignore(Select.field(Basket::getId))
+                .supply(Select.field(Basket::getUser), () -> List.of(user))
                 .create();
 
         testOrder = Instancio.of(Order.class)
