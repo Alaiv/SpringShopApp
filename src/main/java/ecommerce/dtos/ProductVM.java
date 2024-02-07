@@ -8,7 +8,7 @@ import ecommerce.models.Category;
 @Getter
 @Setter
 public class ProductVM {
-    private String id;
+    private Long id;
     private String name;
     private double price;
     private Brand brand;

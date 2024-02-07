@@ -134,7 +134,11 @@ public class ProductControllerTests {
     @Test
     public void testCreate() throws Exception {
         // Arrange
-        var dto = productMapper.map(testProduct);
+        var dto = new ProductDto();
+        dto.setName(JsonNullable.of(testProduct.getName()));
+        dto.setPrice(JsonNullable.of(testProduct.getPrice()));
+        dto.setLeftInStock(JsonNullable.of(testProduct.getLeftInStock()));
+
         var req = post("/api/products/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto));
@@ -144,9 +148,9 @@ public class ProductControllerTests {
                 .andExpect(status().isCreated());
 
         // Assert
-        var product = productsRepository.findByName(dto.getName()).get();
+        var product = productsRepository.findByName(dto.getName().get()).get();
         assertNotNull(product);
-        assertThat(product.getName()).isEqualTo(dto.getName());
+        assertThat(product.getName()).isEqualTo(dto.getName().get());
     }
 
     @Test

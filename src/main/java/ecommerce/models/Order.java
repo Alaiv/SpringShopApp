@@ -22,7 +22,11 @@ public class Order implements BaseEntity{
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "basket_id", referencedColumnName = "id")
     private Basket basket;
+
+    @Column(name = "basket_id", updatable = false, insertable = false)
+    private Long basketId;
 
     @OneToOne
     private Product product;
