@@ -1,21 +1,23 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.OrderDto;
+import ecommerce.dtos.OrderCreateDto;
+import ecommerce.dtos.OrderUpdateDto;
 import ecommerce.dtos.OrderVM;
 import ecommerce.models.Order;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(
-        uses = {ReferenceMapper.class, ProductMapper.class},
+        uses = {ReferenceMapper.class, JsonNullableMapper.class},
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy =  ReportingPolicy.IGNORE
 )
 public abstract class OrderMapper {
-    @Mapping(target = "basket", source = "baskedId")
-    @Mapping(target = "product", source = "productId")
-    public abstract Order map(OrderDto dto);
+
+    @Mapping(target = "orderItems", source = "orderItemsIds")
+    public abstract Order map(OrderCreateDto dto);
+
+    @Mapping(target = "user.id", source = "userId")
     public abstract OrderVM map(Order order);
+
+    public abstract void update(OrderUpdateDto dto, @MappingTarget Order model);
 }

@@ -1,36 +1,39 @@
 package ecommerce.models;
 
+import ecommerce.enums.OrderStatuses;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "orders")
-public class Order implements BaseEntity{
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotNull
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems;
+
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "basket_id", referencedColumnName = "id")
-    private Basket basket;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @Column(name = "basket_id", updatable = false, insertable = false)
-    private Long basketId;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @OneToOne
-    private Product product;
-
-    @CreatedDate
-    private LocalDate createdAt;
+    @NotNull
+    private OrderStatuses orderStatus;
 }

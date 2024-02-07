@@ -2,8 +2,7 @@ package ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
-import ecommerce.dtos.OrderDto;
-import ecommerce.mappers.OrderMapper;
+import ecommerce.dtos.OrderItemDto;
 import ecommerce.models.*;
 import ecommerce.repositories.*;
 import net.datafaker.Faker;
@@ -11,7 +10,6 @@ import org.instancio.Instancio;
 import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,9 +26,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = App.class)
 @AutoConfigureMockMvc
-public class OrdersControllerTests {
+public class OrderItemControllerTests {
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private ProductsRepository productsRepository;
@@ -57,7 +55,7 @@ public class OrdersControllerTests {
     private Faker faker;
 
     private Basket testBasket;
-    private Order testOrder;
+    private OrderItem testOrderItem;
     private Product testProduct;
 
     @BeforeEach
@@ -78,7 +76,7 @@ public class OrdersControllerTests {
 
         var user = Instancio.of(User.class)
                 .supply(Select.field(User::getEmail), () -> faker.darkSouls().classes() + "@google.com")
-                .supply(Select.field(User::getPassword), () -> faker.darkSouls().shield())
+                .supply(Select.field(User::getPassword), () -> faker.funnyName().name())
                 .create();
 
         testBasket = Instancio.of(Basket.class)
@@ -86,10 +84,10 @@ public class OrdersControllerTests {
                 .supply(Select.field(Basket::getUser), () -> List.of(user))
                 .create();
 
-        testOrder = Instancio.of(Order.class)
-                .ignore(Select.field(Order::getId))
-                .supply(Select.field(Order::getBasket), () -> testBasket)
-                .supply(Select.field(Order::getProduct), () -> testProduct)
+        testOrderItem = Instancio.of(OrderItem.class)
+                .ignore(Select.field(OrderItem::getId))
+                .supply(Select.field(OrderItem::getBasket), () -> testBasket)
+                .supply(Select.field(OrderItem::getProduct), () -> testProduct)
                 .create();
 
         brandRepository.save(testBrand);
@@ -102,10 +100,10 @@ public class OrdersControllerTests {
     public void testSearch() throws Exception {
         // Arrange
         basketRepository.save(testBasket);
-        orderRepository.save(testOrder);
+        orderItemRepository.save(testOrderItem);
 
         // Act
-        var res = mockMvc.perform(get("/api/orders/search/" + testBasket.getId()))
+        var res = mockMvc.perform(get("/api/orderItem/search/" + testBasket.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -118,11 +116,11 @@ public class OrdersControllerTests {
     @Test
     public void testCreate() throws Exception {
         // Arrange
-        var dto = new OrderDto();
+        var dto = new OrderItemDto();
         dto.setBaskedId(testBasket.getId());
         dto.setProductId(testProduct.getId());
 
-        var req = post("/api/orders/create")
+        var req = post("/api/orderItem/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(dto));
 
@@ -131,7 +129,7 @@ public class OrdersControllerTests {
                 .andExpect(status().isCreated());
 
         // Assert
-        var order = orderRepository
+        var order = orderItemRepository
                 .findAllByBasketId(testBasket.getId())
                 .stream()
                 .findFirst()
@@ -144,10 +142,10 @@ public class OrdersControllerTests {
     public void testFind() throws Exception {
         // Arrange
         basketRepository.save(testBasket);
-        orderRepository.save(testOrder);
+        orderItemRepository.save(testOrderItem);
 
         // Act
-        var res = mockMvc.perform(get("/api/orders/find/" + testOrder.getId()))
+        var res = mockMvc.perform(get("/api/orderItem/find/" + testOrderItem.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -155,8 +153,8 @@ public class OrdersControllerTests {
 
         // Assert
         assertThatJson(body).and(
-                v -> v.node("basket").node("id").isEqualTo(testOrder.getBasket().getId().intValue()),
-                v -> v.node("product").node("id").isEqualTo(testOrder.getProduct().getId().intValue())
+                v -> v.node("basket").node("id").isEqualTo(testOrderItem.getBasket().getId().intValue()),
+                v -> v.node("product").node("id").isEqualTo(testOrderItem.getProduct().getId().intValue())
         );
     }
 
@@ -164,31 +162,31 @@ public class OrdersControllerTests {
     public void testDelete() throws Exception {
         // Arrange
         basketRepository.save(testBasket);
-        orderRepository.save(testOrder);
+        orderItemRepository.save(testOrderItem);
 
-        var req = delete("/api/orders/remove/" + testOrder.getId());
+        var req = delete("/api/orderItem/remove/" + testOrderItem.getId());
 
         // Act
         mockMvc.perform(req)
                 .andExpect(status().isNoContent());
 
         // Assert
-        assertThat(orderRepository.existsById(testOrder.getId())).isFalse();
+        assertThat(orderItemRepository.existsById(testOrderItem.getId())).isFalse();
     }
 
     @Test
     public void testDeleteAll() throws Exception {
         // Arrange
         basketRepository.save(testBasket);
-        orderRepository.save(testOrder);
+        orderItemRepository.save(testOrderItem);
 
-        var req = delete("/api/orders/removeAll/" + testBasket.getId());
+        var req = delete("/api/orderItem/removeAll/" + testBasket.getId());
 
         // Act
         mockMvc.perform(req)
                 .andExpect(status().isNoContent());
 
         // Assert
-        assertThat(orderRepository.existsById(testOrder.getId())).isFalse();
+        assertThat(orderItemRepository.existsById(testOrderItem.getId())).isFalse();
     }
 }

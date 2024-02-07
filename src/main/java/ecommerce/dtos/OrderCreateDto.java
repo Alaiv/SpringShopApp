@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-public class OrderDto {
-
+public class OrderCreateDto {
     @NotNull
-    private Long baskedId;
-
+    private List<Long> orderItemIds;
     @NotNull
-    private Long productId;
+    private Long userId;
 }
