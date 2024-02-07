@@ -1,6 +1,7 @@
 package ecommerce.controllers;
 
 import ecommerce.dtos.BrandDTO;
+import ecommerce.exceptions.NotFoundException;
 import ecommerce.mappers.BrandMapper;
 import ecommerce.models.Brand;
 import ecommerce.repositories.BrandRepository;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -35,10 +35,7 @@ public class BrandController {
     @GetMapping("/brands/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Brand find(@PathVariable Long id) {
-        var brand = repository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-
-        return brand;
+        return findBrandByIdOrThrow(id);
     }
 
     @PostMapping("/brands")
@@ -53,8 +50,7 @@ public class BrandController {
     @PutMapping("/brands/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Brand update(@RequestBody @Valid BrandDTO dto, @PathVariable Long id) {
-        var brand = repository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        var brand = findBrandByIdOrThrow(id);
 
         mapper.update(dto, brand);
         repository.save(brand);
@@ -65,10 +61,13 @@ public class BrandController {
     @DeleteMapping("/brands/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-
-        var brand = repository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        var brand = findBrandByIdOrThrow(id);
 
         repository.delete(brand);
+    }
+
+    private Brand findBrandByIdOrThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Brand with id %d not found", id)));
     }
 }
