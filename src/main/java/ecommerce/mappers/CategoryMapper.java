@@ -4,6 +4,7 @@ import ecommerce.dtos.CategoryDTO;
 import ecommerce.models.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -13,4 +14,8 @@ import org.mapstruct.ReportingPolicy;
 )
 public abstract class CategoryMapper {
     public abstract Category map(CategoryDTO categoryDTO);
+
+    public abstract CategoryDTO map(Category category);
+
+    public abstract void update(CategoryDTO dto, @MappingTarget Category model);
 }
