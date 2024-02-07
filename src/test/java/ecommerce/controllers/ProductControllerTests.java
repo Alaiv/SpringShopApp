@@ -3,6 +3,7 @@ package ecommerce.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
 import ecommerce.dtos.ProductDto;
+import ecommerce.dtos.filterDtos.ProductRequestFilterDto;
 import ecommerce.mappers.ProductMapper;
 import ecommerce.models.Brand;
 import ecommerce.models.Category;
@@ -26,6 +27,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = App.class)
@@ -71,28 +73,71 @@ public class ProductControllerTests {
     }
 
     @Test
-    public void testSearch() throws Exception {
+    public void testSearchWithFullFilter() throws Exception {
         // Arrange
         categoryRepository.save(testCategory);
         brandRepository.save(testBrand);
         productsRepository.save(testProduct);
 
+        var filterDto = ProductRequestFilterDto.builder()
+                .brandId(testBrand.getId())
+                .categoryId(testCategory.getId())
+                .priceTo(testProduct.getPrice())
+                .priceFrom(testProduct.getPrice() - 1.0)
+                .name(testProduct.getName())
+                .build();
+
+        var req = post("/api/products/search")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(filterDto));
+
         // Act
-        var res = mockMvc.perform(get("/api/products"))
+        var res = mockMvc.perform(req)
                 .andExpect(status().isOk())
                 .andReturn();
 
         var body = res.getResponse().getContentAsString();
 
         // Assert
-        assertThatJson(body).isArray();
+        assertThatJson(body).isArray().hasSize(1);
+        assertThatJson(body).isArray().hasSize(1);
+    }
+
+    @Test
+    public void testSearchWithBlankFilter() throws Exception {
+        // Arrange
+        categoryRepository.save(testCategory);
+        brandRepository.save(testBrand);
+        productsRepository.save(testProduct);
+
+        var filterDto = new ProductRequestFilterDto();
+
+        var req = post("/api/products/search")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(filterDto));
+
+        // Act
+        var res = mockMvc.perform(req)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var body = res.getResponse().getContentAsString();
+
+        // Assert
+        assertThatJson(body).isArray().hasSize(1);
+        assertThatJson(body).isArray().first().and(
+                v -> v.node("name").isEqualTo(testProduct.getName()),
+                v -> v.node("price").isEqualTo(testProduct.getPrice()),
+                v -> v.node("category").node("name").isEqualTo(testProduct.getCategory().getName()),
+                v -> v.node("brand").node("name").isEqualTo(testProduct.getBrand().getName())
+        );
     }
 
     @Test
     public void testCreate() throws Exception {
         // Arrange
         var dto = productMapper.map(testProduct);
-        var req = post("/api/products")
+        var req = post("/api/products/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto));
 

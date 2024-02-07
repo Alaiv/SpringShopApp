@@ -5,7 +5,6 @@ import ecommerce.mappers.BrandMapper;
 import ecommerce.models.Brand;
 import ecommerce.repositories.BrandRepository;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,10 @@ public class BrandController {
 
     @GetMapping("/brands")
     @ResponseStatus(HttpStatus.OK)
-    public List<Brand> search(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int limit) {
+    public List<Brand> search(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int limit
+    ) {
         return repository.findAll(PageRequest.of(page, limit)).toList();
     }
 
