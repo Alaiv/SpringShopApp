@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
 import ecommerce.dtos.BrandDTO;
 import ecommerce.mappers.CategoryMapper;
-import ecommerce.models.Brand;
 import ecommerce.models.Category;
 import ecommerce.repositories.CategoryRepository;
 import net.datafaker.Faker;
@@ -39,12 +38,13 @@ public class CategoryControllerTests {
     @Autowired
     private CategoryMapper categoryMapper;
 
+    @Autowired
+    private Faker faker;
+
     private Category testCategory;
 
     @BeforeEach
     public void setup() {
-        Faker faker = new Faker();
-
         testCategory = Instancio.of(Category.class)
                 .ignore(Select.field(Category::getId))
                 .supply(Select.field(Category::getName), () -> faker.gameOfThrones().character())

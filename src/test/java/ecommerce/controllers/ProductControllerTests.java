@@ -40,22 +40,22 @@ public class ProductControllerTests {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private ProductMapper productMapper;
+    private ProductsRepository productsRepository;
 
     @Autowired
-    private ProductsRepository productsRepository;
-    @Autowired
     private BrandRepository brandRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private Faker faker;
     private Product testProduct;
     private Brand testBrand;
     private Category testCategory;
 
     @BeforeEach
     public void setup() {
-        Faker faker = new Faker();
         testBrand = Instancio.of(Brand.class)
                 .create();
 

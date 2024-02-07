@@ -31,14 +31,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class OrdersControllerTests {
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private ProductsRepository productsRepository;
+
     @Autowired
     private BrandRepository brandRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Autowired
     private BasketRepository basketRepository;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -49,15 +54,14 @@ public class OrdersControllerTests {
     private ObjectMapper om;
 
     @Autowired
-    private OrderMapper orderMapper;
+    private Faker faker;
+
     private Basket testBasket;
     private Order testOrder;
     private Product testProduct;
 
     @BeforeEach
     public void setup() {
-        Faker faker = new Faker();
-
         var testBrand = Instancio.of(Brand.class)
                 .create();
 
@@ -77,11 +81,6 @@ public class OrdersControllerTests {
                 .supply(Select.field(User::getPassword), () -> faker.darkSouls().shield())
                 .create();
 
-        brandRepository.save(testBrand);
-        categoryRepository.save(testCategory);
-        productsRepository.save(testProduct);
-        userRepository.save(user);
-
         testBasket = Instancio.of(Basket.class)
                 .ignore(Select.field(Basket::getId))
                 .supply(Select.field(Basket::getUser), () -> List.of(user))
@@ -92,6 +91,11 @@ public class OrdersControllerTests {
                 .supply(Select.field(Order::getBasket), () -> testBasket)
                 .supply(Select.field(Order::getProduct), () -> testProduct)
                 .create();
+
+        brandRepository.save(testBrand);
+        categoryRepository.save(testCategory);
+        productsRepository.save(testProduct);
+        userRepository.save(user);
     }
 
     @Test

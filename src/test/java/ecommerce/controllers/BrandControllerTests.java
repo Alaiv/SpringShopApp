@@ -38,12 +38,13 @@ public class BrandControllerTests {
     @Autowired
     private BrandMapper brandMapper;
 
+    @Autowired
+    private Faker faker;
+
     private Brand testBrand;
 
     @BeforeEach
     public void setup() {
-        Faker faker = new Faker();
-
         testBrand = Instancio.of(Brand.class)
                 .ignore(Select.field(Brand::getId))
                 .supply(Select.field(Brand::getName), () -> faker.gameOfThrones().character())
