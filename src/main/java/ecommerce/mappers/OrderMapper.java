@@ -7,7 +7,7 @@ import ecommerce.models.Order;
 import org.mapstruct.*;
 
 @Mapper(
-        uses = {ReferenceMapper.class, JsonNullableMapper.class},
+        uses = {ReferenceMapper.class, JsonNullableMapper.class, OrderItemMapper.class},
         componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy =  ReportingPolicy.IGNORE
 )
