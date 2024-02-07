@@ -3,9 +3,7 @@ package ecommerce.controllers;
 import ecommerce.dtos.ProductDto;
 import ecommerce.dtos.ProductVM;
 import ecommerce.dtos.filterDtos.ProductRequestFilterDto;
-import ecommerce.exceptions.NotFoundException;
 import ecommerce.mappers.ProductMapper;
-import ecommerce.models.Product;
 import ecommerce.repositories.ProductsRepository;
 import ecommerce.specifications.ProductSpecification;
 import jakarta.validation.Valid;
@@ -14,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
 @RequestMapping("/api")
@@ -51,7 +51,7 @@ public class ProductController {
     @GetMapping("/products/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductVM find(@PathVariable Long id) {
-        var product = findProductByIdOrThrow(id);
+        var product = findEntityByIdOrThrow(productsRepository, id);
 
         return productMapper.map(product);
     }
@@ -68,7 +68,7 @@ public class ProductController {
     @DeleteMapping("/products/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id) {
-        var product = findProductByIdOrThrow(id);
+        var product = findEntityByIdOrThrow(productsRepository, id);
 
         productsRepository.delete(product);
     }
@@ -76,16 +76,11 @@ public class ProductController {
     @PutMapping("/products/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductVM remove(@PathVariable Long id, @RequestBody @Valid ProductDto dto) {
-        var product = findProductByIdOrThrow(id);
+        var product = findEntityByIdOrThrow(productsRepository, id);
 
         productMapper.update(dto, product);
         productsRepository.save(product);
 
         return productMapper.map(product);
-    }
-
-    private Product findProductByIdOrThrow(Long id) {
-        return productsRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Product with id %d not found", id)));
     }
 }

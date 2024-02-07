@@ -2,16 +2,10 @@ package ecommerce.controllers;
 
 import ecommerce.dtos.OrderDto;
 import ecommerce.dtos.OrderVM;
-import ecommerce.exceptions.NotFoundException;
 import ecommerce.mappers.OrderMapper;
-import ecommerce.models.Order;
-import ecommerce.models.Product;
 import ecommerce.repositories.BasketRepository;
 import ecommerce.repositories.OrderRepository;
-import ecommerce.utils.SearchHelpers;
 import jakarta.transaction.Transactional;
-import org.hibernate.query.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,6 @@
 package ecommerce.controllers;
 
 import ecommerce.dtos.CategoryDTO;
-import ecommerce.exceptions.NotFoundException;
 import ecommerce.mappers.CategoryMapper;
 import ecommerce.models.Category;
 import ecommerce.repositories.CategoryRepository;
@@ -11,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
 @RequestMapping("/api")
@@ -35,7 +36,7 @@ public class CategoryController {
     @GetMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Category find(@PathVariable Long id) {
-        return findCategoryByIdOrThrow(id);
+        return findEntityByIdOrThrow(repository, id);
     }
 
     @PostMapping("/categories")
@@ -50,7 +51,7 @@ public class CategoryController {
     @PutMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Category update(@RequestBody @Valid CategoryDTO dto, @PathVariable Long id) {
-        var category = findCategoryByIdOrThrow(id);
+        var category = findEntityByIdOrThrow(repository, id);
 
         mapper.update(dto, category);
         repository.save(category);
@@ -61,13 +62,8 @@ public class CategoryController {
     @DeleteMapping("/categories/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        var category = findCategoryByIdOrThrow(id);
+        var category = findEntityByIdOrThrow(repository, id);
 
         repository.delete(category);
-    }
-
-    private Category findCategoryByIdOrThrow(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Category with id %d not found", id)));
     }
 }
