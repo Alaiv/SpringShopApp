@@ -1,5 +1,6 @@
-package ecommerce.dtos;
+package ecommerce.dtos.orderItems;
 
+import ecommerce.dtos.product.ProductVM;
 import ecommerce.models.Basket;
 import lombok.Getter;
 import lombok.Setter;

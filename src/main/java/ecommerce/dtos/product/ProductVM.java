@@ -1,4 +1,4 @@
-package ecommerce.dtos;
+package ecommerce.dtos.product;
 
 import lombok.Getter;
 import lombok.Setter;

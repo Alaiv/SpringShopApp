@@ -1,4 +1,4 @@
-package ecommerce.dtos;
+package ecommerce.dtos.brand;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

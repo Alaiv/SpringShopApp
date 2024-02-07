@@ -2,7 +2,7 @@ package ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
-import ecommerce.dtos.BrandDTO;
+import ecommerce.dtos.brand.BrandDTO;
 import ecommerce.mappers.CategoryMapper;
 import ecommerce.models.Category;
 import ecommerce.repositories.CategoryRepository;

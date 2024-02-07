@@ -1,7 +1,7 @@
 package ecommerce.controllers;
 
-import ecommerce.dtos.OrderItemDto;
-import ecommerce.dtos.OrderItemVM;
+import ecommerce.dtos.orderItems.OrderItemDto;
+import ecommerce.dtos.orderItems.OrderItemVM;
 import ecommerce.mappers.OrderItemMapper;
 import ecommerce.repositories.BasketRepository;
 import ecommerce.repositories.OrderItemRepository;

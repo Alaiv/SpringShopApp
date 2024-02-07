@@ -1,8 +1,8 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.OrderCreateDto;
-import ecommerce.dtos.OrderUpdateDto;
-import ecommerce.dtos.OrderVM;
+import ecommerce.dtos.order.OrderCreateDto;
+import ecommerce.dtos.order.OrderUpdateDto;
+import ecommerce.dtos.order.OrderVM;
 import ecommerce.models.Order;
 import org.mapstruct.*;
 
@@ -13,10 +13,10 @@ import org.mapstruct.*;
 )
 public abstract class OrderMapper {
 
-    @Mapping(target = "orderItems", source = "orderItemsIds")
+    @Mapping(target = "orderItems", source = "orderItemIds")
     public abstract Order map(OrderCreateDto dto);
 
-    @Mapping(target = "user.id", source = "userId")
+    @Mapping(target = "userId", source = "user.id")
     public abstract OrderVM map(Order order);
 
     public abstract void update(OrderUpdateDto dto, @MappingTarget Order model);

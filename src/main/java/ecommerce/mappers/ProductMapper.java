@@ -1,7 +1,7 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.ProductDto;
-import ecommerce.dtos.ProductVM;
+import ecommerce.dtos.product.ProductDto;
+import ecommerce.dtos.product.ProductVM;
 import ecommerce.models.Product;
 import org.mapstruct.*;
 

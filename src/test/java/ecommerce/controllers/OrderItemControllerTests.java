@@ -2,7 +2,7 @@ package ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
-import ecommerce.dtos.OrderItemDto;
+import ecommerce.dtos.orderItems.OrderItemDto;
 import ecommerce.models.*;
 import ecommerce.repositories.*;
 import net.datafaker.Faker;

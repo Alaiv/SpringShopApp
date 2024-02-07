@@ -1,6 +1,6 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.BrandDTO;
+import ecommerce.dtos.brand.BrandDTO;
 import ecommerce.models.Brand;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

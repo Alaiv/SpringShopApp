@@ -1,6 +1,6 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.CategoryDTO;
+import ecommerce.dtos.category.CategoryDTO;
 import ecommerce.models.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

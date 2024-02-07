@@ -1,4 +1,4 @@
-package ecommerce.dtos;
+package ecommerce.dtos.order;
 
 import ecommerce.enums.OrderStatuses;
 import lombok.Getter;

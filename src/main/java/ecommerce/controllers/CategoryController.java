@@ -1,6 +1,6 @@
 package ecommerce.controllers;
 
-import ecommerce.dtos.CategoryDTO;
+import ecommerce.dtos.category.CategoryDTO;
 import ecommerce.mappers.CategoryMapper;
 import ecommerce.models.Category;
 import ecommerce.repositories.CategoryRepository;

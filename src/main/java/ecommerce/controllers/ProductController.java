@@ -1,7 +1,7 @@
 package ecommerce.controllers;
 
-import ecommerce.dtos.ProductDto;
-import ecommerce.dtos.ProductVM;
+import ecommerce.dtos.product.ProductDto;
+import ecommerce.dtos.product.ProductVM;
 import ecommerce.dtos.filterDtos.ProductRequestFilterDto;
 import ecommerce.mappers.ProductMapper;
 import ecommerce.repositories.ProductsRepository;

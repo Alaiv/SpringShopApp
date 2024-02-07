@@ -1,6 +1,6 @@
 package ecommerce.controllers;
 
-import ecommerce.dtos.BrandDTO;
+import ecommerce.dtos.brand.BrandDTO;
 import ecommerce.exceptions.NotFoundException;
 import ecommerce.mappers.BrandMapper;
 import ecommerce.models.Brand;

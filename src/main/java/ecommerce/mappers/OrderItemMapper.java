@@ -1,7 +1,7 @@
 package ecommerce.mappers;
 
-import ecommerce.dtos.OrderItemDto;
-import ecommerce.dtos.OrderItemVM;
+import ecommerce.dtos.orderItems.OrderItemDto;
+import ecommerce.dtos.orderItems.OrderItemVM;
 import ecommerce.models.OrderItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

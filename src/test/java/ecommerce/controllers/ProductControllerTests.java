@@ -2,9 +2,8 @@ package ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ecommerce.App;
-import ecommerce.dtos.ProductDto;
+import ecommerce.dtos.product.ProductDto;
 import ecommerce.dtos.filterDtos.ProductRequestFilterDto;
-import ecommerce.mappers.ProductMapper;
 import ecommerce.models.Brand;
 import ecommerce.models.Category;
 import ecommerce.models.Product;
