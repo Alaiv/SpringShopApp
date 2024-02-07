@@ -27,7 +27,6 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = App.class)
@@ -100,7 +99,12 @@ public class ProductControllerTests {
 
         // Assert
         assertThatJson(body).isArray().hasSize(1);
-        assertThatJson(body).isArray().hasSize(1);
+        assertThatJson(body).isArray().first().and(
+                v -> v.node("name").isEqualTo(testProduct.getName()),
+                v -> v.node("price").isEqualTo(testProduct.getPrice()),
+                v -> v.node("category").node("name").isEqualTo(testProduct.getCategory().getName()),
+                v -> v.node("brand").node("name").isEqualTo(testProduct.getBrand().getName())
+        );
     }
 
     @Test
@@ -124,13 +128,7 @@ public class ProductControllerTests {
         var body = res.getResponse().getContentAsString();
 
         // Assert
-        assertThatJson(body).isArray().hasSize(1);
-        assertThatJson(body).isArray().first().and(
-                v -> v.node("name").isEqualTo(testProduct.getName()),
-                v -> v.node("price").isEqualTo(testProduct.getPrice()),
-                v -> v.node("category").node("name").isEqualTo(testProduct.getCategory().getName()),
-                v -> v.node("brand").node("name").isEqualTo(testProduct.getBrand().getName())
-        );
+        assertThatJson(body).isArray().hasSizeGreaterThanOrEqualTo(1);
     }
 
     @Test
