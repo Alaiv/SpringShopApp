@@ -6,6 +6,7 @@ import ecommerce.mappers.BasketItemMapper;
 import ecommerce.repositories.BasketRepository;
 import ecommerce.repositories.BasketItemRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,20 +16,11 @@ import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
 @RequestMapping("api")
+@RequiredArgsConstructor
 public class BasketItemController {
     private final BasketItemRepository basketItemRepository;
     private final BasketRepository basketRepository;
     private final BasketItemMapper basketItemMapper;
-
-    public BasketItemController(
-            BasketItemMapper basketItemMapper,
-            BasketItemRepository basketItemRepository,
-            BasketRepository basketRepository
-    ) {
-        this.basketItemMapper = basketItemMapper;
-        this.basketItemRepository = basketItemRepository;
-        this.basketRepository = basketRepository;
-    }
 
     @GetMapping("/basketItem/search/{basketId}")
     @ResponseStatus(HttpStatus.OK)
@@ -60,7 +52,7 @@ public class BasketItemController {
 
     @DeleteMapping("/basketItem/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeOrderItem(@PathVariable Long id) {
+    public void removeBasketItem(@PathVariable Long id) {
        var order = findEntityByIdOrThrow(basketItemRepository, id);
 
        basketItemRepository.delete(order);

@@ -7,6 +7,7 @@ import ecommerce.mappers.ProductMapper;
 import ecommerce.repositories.ProductsRepository;
 import ecommerce.specifications.ProductSpecification;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +18,11 @@ import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductsRepository productsRepository;
     private final ProductSpecification specification;
     private final ProductMapper productMapper;
-
-    public ProductController(
-            ProductMapper productMapper,
-            ProductsRepository productsRepository,
-            ProductSpecification productSpecification) {
-        this.productMapper = productMapper;
-        this.productsRepository = productsRepository;
-        this.specification = productSpecification;
-    }
 
     @PostMapping("/products/search")
     @ResponseStatus(HttpStatus.OK)

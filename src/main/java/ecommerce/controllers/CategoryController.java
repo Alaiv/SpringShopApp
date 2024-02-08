@@ -5,6 +5,7 @@ import ecommerce.mappers.CategoryMapper;
 import ecommerce.models.Category;
 import ecommerce.repositories.CategoryRepository;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,10 @@ import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
-
-    public CategoryController(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
-        this.repository = categoryRepository;
-        this.mapper = categoryMapper;
-    }
 
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)

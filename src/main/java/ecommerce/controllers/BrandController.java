@@ -6,6 +6,7 @@ import ecommerce.mappers.BrandMapper;
 import ecommerce.models.Brand;
 import ecommerce.repositories.BrandRepository;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class BrandController {
     private final BrandRepository repository;
     private final BrandMapper mapper;
-
-    public BrandController(BrandRepository brandRepository, BrandMapper brandMapper) {
-        this.repository = brandRepository;
-        this.mapper = brandMapper;
-    }
 
     @GetMapping("/brands")
     @ResponseStatus(HttpStatus.OK)
