@@ -16,8 +16,8 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: '17'
-        distribution: 'oracle'
+        distribution: 'temurin'
 
-    - name: Build
-      run: ./gradlew build
+    - name: Test
+      run: gradle clean test
       
