@@ -75,7 +75,7 @@ public class ProductController {
 
     @PutMapping("/products/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductVM remove(@PathVariable Long id, @RequestBody @Valid ProductDto dto) {
+    public ProductVM update(@PathVariable Long id, @RequestBody @Valid ProductDto dto) {
         var product = findEntityByIdOrThrow(productsRepository, id);
 
         productMapper.update(dto, product);
