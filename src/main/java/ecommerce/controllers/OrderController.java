@@ -24,16 +24,16 @@ import java.util.List;
 import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class OrderController {
     private final OrderRepository orderRepository;
     private final BasketItemRepository basketItemRepository;
     private final BasketRepository basketRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
+    private final OrderSpecification orderSpecification;
     private final OrderItemMapper itemMapper;
-    private final OrderSpecification specification;
 
     @PostMapping("/orders/search")
     @ResponseStatus(HttpStatus.OK)
@@ -42,7 +42,7 @@ public class OrderController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        var spec = specification.build(filter);
+        var spec = orderSpecification.build(filter);
         var orders = orderRepository.findAll(spec, PageRequest.of(page - 1, limit));
 
         var result = orders
