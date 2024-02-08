@@ -21,9 +21,6 @@ jobs:
       uses: gradle/gradle-build-action@v3
       with:
          gradle-version: 8.5
-         
-    - name: Execute Gradle build
-      run: ./gradlew build
 
     - name: Execute Gradle test
       run: ./gradlew test
