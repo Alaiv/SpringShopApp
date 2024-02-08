@@ -4,6 +4,7 @@ import ecommerce.dtos.filterDtos.OrderRequestFilterDto;
 import ecommerce.dtos.order.OrderCreateDto;
 import ecommerce.dtos.order.OrderVM;
 import ecommerce.enums.OrderStatuses;
+import ecommerce.exceptions.BadRequestException;
 import ecommerce.mappers.OrderItemMapper;
 import ecommerce.mappers.OrderMapper;
 import ecommerce.repositories.BasketItemRepository;
@@ -66,7 +67,7 @@ public class OrderController {
         var basket = findEntityByIdOrThrow(basketRepository, dto.getBasketId());
         var basketItems = basketItemRepository.findAllByBasketId(basket.getId());
 
-        if (basketItems.isEmpty()) throw new RuntimeException("Can't create order with empty basket.");
+        if (basketItems.isEmpty()) throw new BadRequestException("Can't create order with empty basket.");
 
         var orderItems = basketItems.stream()
                 .map(itemMapper::map)
