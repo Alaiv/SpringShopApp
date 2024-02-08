@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
@@ -35,7 +36,9 @@ public class ProductController {
         var products = productsRepository.findAll(spec, PageRequest.of(page - 1, limit));
 
         var result = products
+                .stream()
                 .map(productMapper::map)
+                .sorted(Comparator.comparing(ProductVM::getId))
                 .toList();
 
         return result;
