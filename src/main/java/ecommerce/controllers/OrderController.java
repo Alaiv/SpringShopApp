@@ -4,7 +4,10 @@ import ecommerce.dtos.filterDtos.OrderRequestFilterDto;
 import ecommerce.dtos.order.OrderCreateDto;
 import ecommerce.dtos.order.OrderVM;
 import ecommerce.enums.OrderStatuses;
+import ecommerce.mappers.OrderItemMapper;
 import ecommerce.mappers.OrderMapper;
+import ecommerce.repositories.BasketItemRepository;
+import ecommerce.repositories.BasketRepository;
 import ecommerce.repositories.OrderItemRepository;
 import ecommerce.repositories.OrderRepository;
 import ecommerce.specifications.OrderSpecification;
@@ -24,8 +27,11 @@ import static ecommerce.utils.SearchHelpers.findEntityByIdOrThrow;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderRepository orderRepository;
+    private final BasketItemRepository basketItemRepository;
+    private final BasketRepository basketRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
+    private final OrderItemMapper itemMapper;
     private final OrderSpecification specification;
 
     @PostMapping("/orders/search")
@@ -36,16 +42,16 @@ public class OrderController {
             @RequestParam(defaultValue = "10") int limit
     ) {
         var spec = specification.build(filter);
-        var products = orderRepository.findAll(spec, PageRequest.of(page - 1, limit));
+        var orders = orderRepository.findAll(spec, PageRequest.of(page - 1, limit));
 
-        var result = products
+        var result = orders
                 .map(orderMapper::map)
                 .toList();
 
         return result;
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/orders/find/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderVM find(@PathVariable Long id) {
         var product = findEntityByIdOrThrow(orderRepository, id);
@@ -55,14 +61,28 @@ public class OrderController {
 
     @PostMapping("/orders/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     public OrderVM create(@Valid @RequestBody OrderCreateDto dto) {
-        var orderModel = orderMapper.map(dto);
-        orderRepository.save(orderModel);
+        var basket = findEntityByIdOrThrow(basketRepository, dto.getBasketId());
+        var basketItems = basketItemRepository.findAllByBasketId(basket.getId());
 
-        return orderMapper.map(orderModel);
+        if (basketItems.isEmpty()) throw new RuntimeException("Can't create order with empty basket.");
+
+        var orderItems = basketItems.stream()
+                .map(itemMapper::map)
+                .toList();
+
+        var order = orderMapper.map(dto);
+        order.setOrderItems(orderItems);
+        order.setOrderStatus(OrderStatuses.CREATED);
+
+        orderRepository.save(order);
+        basketItemRepository.deleteAllByBasketId(basket.getId());
+
+        return orderMapper.map(order);
     }
 
-    @DeleteMapping("/orders/{id}")
+    @DeleteMapping("/orders/remove/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable Long id) {
         var product = findEntityByIdOrThrow(orderRepository, id);
@@ -70,27 +90,13 @@ public class OrderController {
         orderRepository.delete(product);
     }
 
-    @PutMapping("/orders/{id}/addOrderItem/{orderItemId}")
+    @PutMapping("/orders/{id}/update")
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
-    public OrderVM update(@PathVariable Long id, @PathVariable Long orderItemId) {
-        var order = findEntityByIdOrThrow(orderRepository, id);
-        var orderItem = findEntityByIdOrThrow(orderItemRepository, orderItemId);
-
-        order.getOrderItems().add(orderItem);
-        orderRepository.save(order);
-
-        return orderMapper.map(order);
-    }
-
-    @PutMapping("/orders/{id}/changeOrderStatus")
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional
-    public OrderVM update(@PathVariable Long id, @RequestParam OrderStatuses status) {
+    public OrderVM update(@PathVariable Long id, @RequestParam(name = "status") OrderStatuses status) {
         var order = findEntityByIdOrThrow(orderRepository, id);
         order.setOrderStatus(status);
 
-        orderRepository.save(order);
+        orderRepository.saveAndFlush(order);
 
         return orderMapper.map(order);
     }

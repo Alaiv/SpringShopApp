@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class OrderCreateDto {
     @NotNull
-    private List<Long> orderItemIds;
+    private Long basketId;
     @NotNull
     private Long userId;
 }

@@ -1,6 +1,7 @@
 package ecommerce.dtos.order;
 
 import ecommerce.enums.OrderStatuses;
+import ecommerce.models.BasketItem;
 import ecommerce.models.OrderItem;
 import lombok.Getter;
 import lombok.Setter;

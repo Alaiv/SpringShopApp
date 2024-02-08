@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
@@ -23,16 +24,15 @@ public class Order {
     private Long id;
 
     @NotNull
-    @OneToMany(mappedBy = "order")
-    private List<OrderItem> orderItems;
-
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private Long userId;
+    @OneToOne
+    private Basket basket;
+
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
+    private List<OrderItem> orderItems;
 
     @NotNull
     private OrderStatuses orderStatus;

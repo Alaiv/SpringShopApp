@@ -1,4 +1,4 @@
-package ecommerce.dtos.orderItems;
+package ecommerce.dtos.basketItems;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderItemDto {
+public class BasketItemDto {
 
     @NotNull
-    private Long baskedId;
+    private Long basketId;
 
     @NotNull
     private Long productId;

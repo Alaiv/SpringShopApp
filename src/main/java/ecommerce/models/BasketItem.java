@@ -14,19 +14,19 @@ import java.time.LocalDate;
 @Setter
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "orderItems")
-public class OrderItem implements BaseEntity{
+@Table(name = "basketItems")
+public class BasketItem implements BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
+    @ManyToOne
+    @JoinColumn(name = "basket_id", referencedColumnName = "id")
+    private Basket basket;
 
-    @Column(name = "order_id", updatable = false, insertable = false)
-    private Long orderId;
+    @Column(name = "basket_id", updatable = false, insertable = false)
+    private Long basketId;
 
     @OneToOne
     private Product product;
